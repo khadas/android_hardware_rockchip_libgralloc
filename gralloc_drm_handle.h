@@ -78,6 +78,35 @@ typedef enum
 
 #endif
 
+/*-----------------------------------*/
+
+/* for building midgard_mali_so in Android 8.x. */
+#ifndef USE_HWC2
+#if PLATFORM_SDK_VERSION >= 26
+#define USE_HWC2
+#endif
+#endif
+
+/*-----------------------------------*/
+
+#if PLATFORM_SDK_VERSION >= 26
+
+#ifndef RK_DRM_GRALLOC
+#error
+#endif
+
+#ifndef MALI_AFBC_GRALLOC
+#error
+#endif
+
+#ifndef USE_HWC2
+#error
+#endif
+
+#endif // #if PLATFORM_SDK_VERSION >= 26
+
+/*-----------------------------------*/
+
 struct gralloc_drm_bo_t;
 
 struct gralloc_drm_handle_t {
