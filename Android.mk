@@ -81,9 +81,7 @@ else
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libgralloc_drm
-ifeq (1,$(strip $(shell expr $(PLATFORM_VERSION) \>= 8.0)))
 LOCAL_PROPRIETARY_MODULE := true
-endif
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := \
@@ -127,11 +125,19 @@ MALI_USE_YUV_AFBC_WIDEBLK?=0
 # AFBC buffers should be initialised after allocation in all rk platforms.
 GRALLOC_INIT_AFBC?=1
 
-# use afbc layer
+# not use afbc layer by default.
 USE_AFBC_LAYER = 0
 
+ifeq ($(strip $(TARGET_BOARD_PLATFORM)),rk3399)
+USE_AFBC_LAYER = 1
+ifeq ($(strip $(TARGET_BOARD_PLATFORM_PRODUCT)),box)
+USE_AFBC_LAYER = 0
+endif
+endif
 
-MALI_AFBC_GRALLOC := 0
+# enable AFBC by default
+MALI_AFBC_GRALLOC := 1
+
 DISABLE_FRAMEBUFFER_HAL?=1
 GRALLOC_DEPTH?=GRALLOC_32_BITiS
 GRALLOC_FB_SWAP_RED_BLUE?=0
@@ -145,16 +151,11 @@ endif
 
 ifeq ($(strip $(TARGET_BOARD_PLATFORM_GPU)), mali-t720)
 MALI_AFBC_GRALLOC := 0
-USE_AFBC_LAYER = 0
 LOCAL_CFLAGS += -DMALI_PRODUCT_ID_T72X=1
 endif
 
 ifeq ($(strip $(TARGET_BOARD_PLATFORM_GPU)), mali-t760)
 MALI_AFBC_GRALLOC := 1
-# rk3288 vop cann't support AFBC.
-ifneq ($(strip $(TARGET_BOARD_PLATFORM)),rk3288)
-USE_AFBC_LAYER = 1
-endif
 LOCAL_CFLAGS += -DMALI_PRODUCT_ID_T76X=1
 endif
 
@@ -167,11 +168,6 @@ endif
 LOCAL_CFLAGS += -DMALI_PRODUCT_ID_T86X=1
 endif
 
-# Disable afbc in box platform.
-ifeq ($(strip $(TARGET_BOARD_PLATFORM_PRODUCT)),box)
-USE_AFBC_LAYER = 0
-endif
-
 ifeq ($(MALI_AFBC_GRALLOC), 1)
 AFBC_FILES = gralloc_buffer_priv.cpp
 else
@@ -181,9 +177,11 @@ endif
 
 LOCAL_C_INCLUDES += hardware/rockchip/librkvpu
 LOCAL_SRC_FILES += gralloc_drm_rockchip.cpp \
-		format_chooser.cpp \
-		format_chooser_blockinit.cpp \
-		$(AFBC_FILES)
+	mali_gralloc_formats.cpp \
+	$(AFBC_FILES)
+
+LOCAL_SHARED_LIBRARIES += libdrm_rockchip
+
 #RK_DRM_GRALLOC for rockchip drm gralloc
 #RK_DRM_GRALLOC_DEBUG for rockchip drm gralloc debug.
 MAJOR_VERSION := "RK_GRAPHICS_VER=commit-id:$(shell cd $(LOCAL_PATH) && git log  -1 --oneline | awk '{print $$1}')"
@@ -195,6 +193,7 @@ endif
 
 # disable arm_format_selection on rk platforms, by default.
 LOCAL_CFLAGS += -DGRALLOC_ARM_FORMAT_SELECTION_DISABLE
+LOCAL_CFLAGS += -DGRALLOC_LIBRARY_BUILD=1 -DGRALLOC_USE_GRALLOC1_API=0
 
 ifeq ($(GRALLOC_FB_SWAP_RED_BLUE),1)
 LOCAL_CFLAGS += -DGRALLOC_FB_SWAP_RED_BLUE
@@ -207,8 +206,6 @@ endif
 ifdef PLATFORM_CFLAGS
 LOCAL_CFLAGS += $(PLATFORM_CFLAGS)
 endif
-
-LOCAL_SHARED_LIBRARIES += libdrm_rockchip
 
 endif
 
@@ -244,6 +241,7 @@ LOCAL_SHARED_LIBRARIES += libdl
 endif # DRM_USES_PIPE
 include $(BUILD_SHARED_LIBRARY)
 
+# ------------ #
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -269,9 +267,7 @@ ifeq ($(TARGET_USES_HWC2),true)
 endif
 
 LOCAL_MODULE := gralloc.$(TARGET_BOARD_HARDWARE)
-ifeq (1,$(strip $(shell expr $(PLATFORM_VERSION) \>= 8.0)))
 LOCAL_PROPRIETARY_MODULE := true
-endif
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_RELATIVE_PATH := hw
 include $(BUILD_SHARED_LIBRARY)

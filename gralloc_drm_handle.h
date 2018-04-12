@@ -24,12 +24,16 @@
 #ifndef _GRALLOC_DRM_HANDLE_H_
 #define _GRALLOC_DRM_HANDLE_H_
 
-//#include <system/window.h>
+// #define ENABLE_DEBUG_LOG
+#include <log/custom_log.h>
+
 #include <cutils/native_handle.h>
 #include <system/graphics.h>
 #include <hardware/gralloc.h>
 
+#include "mali_gralloc_usages.h"
 #include "mali_gralloc_formats.h"
+#include "mali_gralloc_private_interface_types.h"
 
 
 #ifdef __cplusplus
@@ -38,15 +42,6 @@ extern "C" {
 
 #if RK_DRM_GRALLOC
 #define GRALLOC_UN_USED(arg)     (arg=arg)
-typedef enum
-{
-	MALI_YUV_NO_INFO,
-	MALI_YUV_BT601_NARROW,
-	MALI_YUV_BT601_WIDE,
-	MALI_YUV_BT709_NARROW,
-	MALI_YUV_BT709_WIDE
-} mali_gralloc_yuv_info;
-
 typedef enum
 {
 	MALI_DPY_TYPE_UNKNOWN = 0,
