@@ -137,9 +137,6 @@ struct rockchip_buffer {
 #define ODD_ALIGN(x, align)		(((x) % ((align) * 2) == 0) ? ((x) + (align)) : (x))
 #define GRALLOC_ODD_ALIGN( value, base )   ODD_ALIGN(GRALLOC_ALIGN(value, base), base)
 
-static void drm_gem_rockchip_free(struct gralloc_drm_drv_t *drv,
-		struct gralloc_drm_bo_t *bo);
-
 /*---------------------------------------------------------------------------*/
 
 #define AFBC_PIXELS_PER_BLOCK 16
