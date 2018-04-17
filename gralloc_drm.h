@@ -46,9 +46,13 @@ static inline int gralloc_drm_get_bpp(int format)
 	int bpp;
 
 	switch (format) {
+	case HAL_PIXEL_FORMAT_RGBA_FP16:
+		bpp = 8;
+		break;
 	case HAL_PIXEL_FORMAT_RGBA_8888:
 	case HAL_PIXEL_FORMAT_RGBX_8888:
 	case HAL_PIXEL_FORMAT_BGRA_8888:
+	case HAL_PIXEL_FORMAT_RGBA_1010102:
 		bpp = 4;
 		break;
 	case HAL_PIXEL_FORMAT_RGB_888:
