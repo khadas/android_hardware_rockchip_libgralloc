@@ -1554,7 +1554,7 @@ struct gralloc_drm_bo_t *drm_gem_rockchip_alloc(
 
                     if ( handle->prime_fd < 0 ) // 只在将实际分配 buffer 的时候打印.
                     {
-                        I("use_afbc_layer: force to set 'internal_format' to 0x%" PRIu64 " for buffer_for_fb_target_layer.",
+                        I("use_afbc_layer: force to set 'internal_format' to 0x%" PRIx64 " for buffer_for_fb_target_layer.",
                           internal_format);
                     }
                     property_set("sys.gmali.fbdc_target","1");
@@ -1831,7 +1831,7 @@ struct gralloc_drm_bo_t *drm_gem_rockchip_alloc(
             break;
 
         default:
-            E("unexpected 'base_format' : 0x%" PRIu64, base_format);
+            E("unexpected 'base_format' : 0x%" PRIx64, base_format);
             return NULL;
     }
 
@@ -2134,7 +2134,7 @@ struct gralloc_drm_bo_t *drm_gem_rockchip_alloc(
         handle->name = 0;
 	buf->base.handle = handle;
 
-        AINF("leave, w : %d, h : %d, format : 0x%x,internal_format : 0x%" PRIu64 ", usage : 0x%x. size=%d,pixel_stride=%d,byte_stride=%d",
+        AINF("leave, w : %d, h : %d, format : 0x%x,internal_format : 0x%" PRIx64 ", usage : 0x%x. size=%d,pixel_stride=%d,byte_stride=%d",
                 handle->width, handle->height, handle->format,internal_format, handle->usage, handle->size,
                 pixel_stride,byte_stride);
         AINF("leave: prime_fd=%d,share_attr_fd=%d",handle->prime_fd,handle->share_attr_fd);
