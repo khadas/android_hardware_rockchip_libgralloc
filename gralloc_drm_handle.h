@@ -24,9 +24,6 @@
 #ifndef _GRALLOC_DRM_HANDLE_H_
 #define _GRALLOC_DRM_HANDLE_H_
 
-// #define ENABLE_DEBUG_LOG
-#include <log/custom_log.h>
-
 #include <cutils/native_handle.h>
 #include <system/graphics.h>
 #include <hardware/gralloc.h>
