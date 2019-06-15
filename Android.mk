@@ -165,6 +165,10 @@ endif
 
 ifeq ($(strip $(TARGET_BOARD_PLATFORM_GPU)), mali-t860)
 MALI_AFBC_GRALLOC := 1
+USE_AFBC_LAYER = 0
+ifeq ($(strip $(BOARD_MULTISCREEN_SPLICING)),true)
+USE_AFBC_LAYER = 0
+endif
 LOCAL_CFLAGS += -DMALI_PRODUCT_ID_T86X=1
 endif
 
